@@ -7,9 +7,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class ProjectSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -35,14 +39,19 @@ public class ProjectSecurityConfig extends WebSecurityConfigurerAdapter {
     /*
         Configure user and its roles
      */
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        InMemoryUserDetailsManager userDetailsManager = new InMemoryUserDetailsManager();
-        UserDetails user = User.withUsername("Amit").password("password").authorities("admin").build();
-        UserDetails user1 = User.withUsername("user").password("password").authorities("read").build();
-        userDetailsManager.createUser(user);
-        userDetailsManager.createUser(user1);
-        auth.userDetailsService(userDetailsManager);
-    }
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        InMemoryUserDetailsManager userDetailsManager = new InMemoryUserDetailsManager();
+//        UserDetails user = User.withUsername("Amit").password("password").authorities("admin").build();
+//        UserDetails user1 = User.withUsername("user").password("password").authorities("read").build();
+//        userDetailsManager.createUser(user);
+//        userDetailsManager.createUser(user1);
+//        auth.userDetailsService(userDetailsManager);
+//    }
+//     Refer User from database
+//    @Bean
+//    public UserDetailsService userDetailsService(DataSource dataSource){
+//        return  new JdbcUserDetailsManager(dataSource);
+//    }
     //To fix :- java.lang.IllegalArgumentException: There is no PasswordEncoder mapped for the id "null"
     @Bean
     public PasswordEncoder passwordEncoder(){
