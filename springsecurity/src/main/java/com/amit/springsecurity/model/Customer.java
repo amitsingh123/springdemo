@@ -1,12 +1,10 @@
 package com.amit.springsecurity.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.Set;
 
 @Entity
 public class Customer {
@@ -24,6 +22,9 @@ public class Customer {
 	private String role;
 	@Column(name = "create_dt")
 	private String createDt;
+	@JsonIgnore
+	@OneToMany(mappedBy="customer",fetch= FetchType.EAGER)
+	private Set<Authority> authorities;
 
 	public int getId() {
 		return id;
@@ -79,5 +80,13 @@ public class Customer {
 
 	public void setCreateDt(String createDt) {
 		this.createDt = createDt;
+	}
+
+	public Set<Authority> getAuthorities() {
+		return authorities;
+	}
+
+	public void setAuthorities(Set<Authority> authorities) {
+		this.authorities = authorities;
 	}
 }
