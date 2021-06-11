@@ -1,5 +1,7 @@
 package com.amit.springsecurity.config;
 
+import com.amit.springsecurity.filter.AuthoritiesLoggingAfterFilter;
+import com.amit.springsecurity.filter.AuthoritiesLoggingAtFilter;
 import com.amit.springsecurity.filter.RequestValidationBeforeFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,6 +45,8 @@ public class ProjectSecurityConfig extends WebSecurityConfigurerAdapter {
             }
         }).and().csrf().ignoringAntMatchers("/contact").csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
                 .addFilterBefore(new RequestValidationBeforeFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(new AuthoritiesLoggingAfterFilter(),BasicAuthenticationFilter.class)
+                .addFilterAfter(new AuthoritiesLoggingAtFilter(),BasicAuthenticationFilter.class)
                 .authorizeRequests()
             .antMatchers("/accounts").hasRole("USER")
             .antMatchers("/balance").hasAnyRole("USER","ADMIN")
