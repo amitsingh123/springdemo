@@ -1,8 +1,6 @@
 package com.amit.springsecurity.config;
 
-import com.amit.springsecurity.filter.AuthoritiesLoggingAfterFilter;
-import com.amit.springsecurity.filter.AuthoritiesLoggingAtFilter;
-import com.amit.springsecurity.filter.RequestValidationBeforeFilter;
+import com.amit.springsecurity.filter.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -49,10 +47,11 @@ public class ProjectSecurityConfig extends WebSecurityConfigurerAdapter {
                 return config;
             }
         }).and().csrf().disable()
-                //ignoringAntMatchers("/contact").csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
                 .addFilterBefore(new RequestValidationBeforeFilter(), BasicAuthenticationFilter.class)
                 .addFilterAfter(new AuthoritiesLoggingAfterFilter(),BasicAuthenticationFilter.class)
-                .addFilterAfter(new AuthoritiesLoggingAtFilter(),BasicAuthenticationFilter.class)
+                .addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(new JWTTokenGeneratorFilter(), BasicAuthenticationFilter.class)
+                .addFilterAt(new AuthoritiesLoggingAtFilter(),BasicAuthenticationFilter.class)
                 .authorizeRequests()
             .antMatchers("/accounts").hasRole("USER")
             .antMatchers("/balance").hasAnyRole("USER","ADMIN")
